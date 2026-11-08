@@ -15,3 +15,4 @@ Place exported dashboard screenshots here using the filenames below to populate 
 2. Navigate to each page tab.
 3. Use Windows Snipping Tool (`Win + Shift + S`) or select **File > Export > Export to PDF** (and convert pages to PNG).
 4. Save the images into this `screenshots/` folder matching the filenames above.
+
