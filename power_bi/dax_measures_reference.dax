@@ -1,0 +1,184 @@
+// ==============================================================================
+// Bond Portfolio Risk & Convexity Analytics - DAX Measures Reference
+// File: d:\INTERNSHIP2\power_bi\dax_measures_reference.dax
+// Target Model: BondPortfolioRisk
+// Description: Complete production DAX measures across portfolio valuation,
+//              coupon yields, rate sensitivities, stress tests, and Monte Carlo VaR.
+// ==============================================================================
+
+// ==============================================================================
+// 1. Portfolio Overview & Valuation Measures
+// ==============================================================================
+
+// Total count of distinct bond holdings in the portfolio
+Total Bonds = 
+COUNTROWS('bond_portfolio_data')
+
+// Aggregate portfolio market value in base currency (INR)
+Total Portfolio Market Value = 
+SUM('bond_portfolio_data'[MarketValue_INR])
+
+// Simple arithmetic average coupon across all positions
+Average Coupon Rate = 
+AVERAGE('bond_portfolio_data'[CouponRate])
+
+// Arithmetic average Yield to Maturity across all positions
+Average Yield to Maturity = 
+AVERAGE('bond_portfolio_data'[YieldToMaturity])
+
+// Capital-weighted average Yield to Maturity based on position market values
+Weighted Average YTM = 
+DIVIDE(
+    SUMX('bond_portfolio_data', 'bond_portfolio_data'[YieldToMaturity] * 'bond_portfolio_data'[MarketValue_INR]),
+    [Total Portfolio Market Value],
+    0
+)
+
+// Capital-weighted average coupon yield based on position market values
+Weighted Average Coupon Rate = 
+DIVIDE(
+    SUMX('bond_portfolio_data', 'bond_portfolio_data'[CouponRate] * 'bond_portfolio_data'[MarketValue_INR]),
+    [Total Portfolio Market Value],
+    0
+)
+
+// Position percentage contribution to total portfolio
+Portfolio Weight % = 
+DIVIDE(
+    [Total Portfolio Market Value],
+    CALCULATE([Total Portfolio Market Value], ALL('bond_portfolio_data')),
+    0
+)
+
+// Dynamic issuer exposure share based on active filter context
+Issuer Exposure % = 
+DIVIDE(
+    SUM('bond_portfolio_data'[MarketValue_INR]),
+    CALCULATE(SUM('bond_portfolio_data'[MarketValue_INR]), ALLSELECTED('bond_portfolio_data')),
+    0
+)
+
+// Dynamic bond structure exposure share (Fixed vs Floating)
+Bond Type Exposure % = 
+DIVIDE(
+    SUM('bond_portfolio_data'[MarketValue_INR]),
+    CALCULATE(SUM('bond_portfolio_data'[MarketValue_INR]), ALLSELECTED('bond_portfolio_data')),
+    0
+)
+
+
+// ==============================================================================
+// 2. Interest Rate Sensitivity & Risk Measures
+// ==============================================================================
+
+// Capital-weighted portfolio effective duration in years
+Portfolio Effective Duration = 
+DIVIDE(
+    SUMX('bond_portfolio_data', 'bond_portfolio_data'[EffectiveDuration] * 'bond_portfolio_data'[MarketValue_INR]),
+    [Total Portfolio Market Value],
+    0
+)
+
+// Capital-weighted portfolio effective convexity
+Portfolio Effective Convexity = 
+DIVIDE(
+    SUMX('bond_portfolio_data', 'bond_portfolio_data'[EffectiveConvexity] * 'bond_portfolio_data'[MarketValue_INR]),
+    [Total Portfolio Market Value],
+    0
+)
+
+// Dollar Value of 01: Portfolio monetary value change for 1 bp yield shift
+Total DV01 = 
+SUMX(
+    'bond_portfolio_data',
+    'bond_portfolio_data'[DV01_Per100Face] * ('bond_portfolio_data'[Quantity] * 'bond_portfolio_data'[FaceValue] / 100)
+)
+
+// Dynamic estimated monetary portfolio P&L under chosen interest rate shock
+Estimated Price Shock Impact INR = 
+VAR ShockChoice = SELECTEDVALUE('RateShockParameter'[Shock_bps], 100)
+RETURN
+SWITCH(
+    ShockChoice,
+    -200, SUMX('bond_portfolio_data', ('bond_portfolio_data'[PriceChange_Dn200bps] / NULLIF('bond_portfolio_data'[CleanPrice], 0)) * 'bond_portfolio_data'[MarketValue_INR]),
+    -100, SUMX('bond_portfolio_data', ('bond_portfolio_data'[PriceChange_Dn100bps] / NULLIF('bond_portfolio_data'[CleanPrice], 0)) * 'bond_portfolio_data'[MarketValue_INR]),
+    -50,  SUMX('bond_portfolio_data', ('bond_portfolio_data'[PriceChange_Dn50bps]  / NULLIF('bond_portfolio_data'[CleanPrice], 0)) * 'bond_portfolio_data'[MarketValue_INR]),
+    50,   SUMX('bond_portfolio_data', ('bond_portfolio_data'[PriceChange_Up50bps]  / NULLIF('bond_portfolio_data'[CleanPrice], 0)) * 'bond_portfolio_data'[MarketValue_INR]),
+    100,  SUMX('bond_portfolio_data', ('bond_portfolio_data'[PriceChange_Up100bps] / NULLIF('bond_portfolio_data'[CleanPrice], 0)) * 'bond_portfolio_data'[MarketValue_INR]),
+    200,  SUMX('bond_portfolio_data', ('bond_portfolio_data'[PriceChange_Up200bps] / NULLIF('bond_portfolio_data'[CleanPrice], 0)) * 'bond_portfolio_data'[MarketValue_INR]),
+    0
+)
+
+// Percentage portfolio return impact under chosen shock
+Price Shock Portfolio Return % = 
+DIVIDE([Estimated Price Shock Impact INR], [Total Portfolio Market Value], 0)
+
+// Monetary P&L impact for an immediate -100 bps downward yield shock
+Shock Impact Dn100bps INR = 
+SUMX(
+    'bond_portfolio_data',
+    DIVIDE('bond_portfolio_data'[PriceChange_Dn100bps], 'bond_portfolio_data'[CleanPrice], 0) * 'bond_portfolio_data'[MarketValue_INR]
+)
+
+// Monetary P&L impact for an immediate +100 bps upward yield shock
+Shock Impact Up100bps INR = 
+SUMX(
+    'bond_portfolio_data',
+    DIVIDE('bond_portfolio_data'[PriceChange_Up100bps], 'bond_portfolio_data'[CleanPrice], 0) * 'bond_portfolio_data'[MarketValue_INR]
+)
+
+
+// ==============================================================================
+// 3. Monte Carlo Simulation, P&L Decomposition & VaR
+// ==============================================================================
+
+// Sum of duration-driven P&L component across simulation scenarios
+Simulated Duration P&L = 
+SUM('monte_carlo_scenarios'[PnL_DurationEffect_INR])
+
+// Sum of convexity-driven P&L adjustment across simulation scenarios
+Simulated Convexity P&L = 
+SUM('monte_carlo_scenarios'[PnL_ConvexityEffect_INR])
+
+// Sum of total P&L across simulation scenarios
+Simulated Total P&L = 
+SUM('monte_carlo_scenarios'[PnL_Total_INR])
+
+// Expected / average P&L across all 1,000 Monte Carlo scenarios
+Average Scenario P&L = 
+AVERAGE('monte_carlo_scenarios'[PnL_Total_INR])
+
+// Empirical 95% 1-Day Value-at-Risk in INR (5th percentile scenario outcome)
+95% VaR (INR) = 
+PERCENTILE.INC('monte_carlo_scenarios'[PnL_Total_INR], 0.05)
+
+// Empirical 95% 1-Day Value-at-Risk percentage
+95% VaR (%) = 
+PERCENTILE.INC('monte_carlo_scenarios'[PnL_Pct], 0.05)
+
+// Empirical 99% 1-Day Value-at-Risk in INR (1st percentile scenario outcome)
+99% VaR (INR) = 
+PERCENTILE.INC('monte_carlo_scenarios'[PnL_Total_INR], 0.01)
+
+// Empirical 99% 1-Day Value-at-Risk percentage
+99% VaR (%) = 
+PERCENTILE.INC('monte_carlo_scenarios'[PnL_Pct], 0.01)
+
+// 95% Expected Shortfall (Conditional VaR): Average loss beyond 95% VaR threshold
+95% Expected Shortfall (INR) = 
+VAR VaR95 = [95% VaR (INR)]
+RETURN
+CALCULATE(
+    AVERAGE('monte_carlo_scenarios'[PnL_Total_INR]),
+    'monte_carlo_scenarios'[PnL_Total_INR] <= VaR95
+)
+
+// 99% Expected Shortfall (Conditional VaR): Average loss beyond 99% VaR threshold
+99% Expected Shortfall (INR) = 
+VAR VaR99 = [99% VaR (INR)]
+RETURN
+CALCULATE(
+    AVERAGE('monte_carlo_scenarios'[PnL_Total_INR]),
+    'monte_carlo_scenarios'[PnL_Total_INR] <= VaR99
+)
+

@@ -1,0 +1,66 @@
+# ==============================================================================
+# Power BI Desktop / Microsoft Fabric PBIP Exclusions
+# ==============================================================================
+# Analysis Services local tabular model data cache (binary backup)
+**/.pbi/cache.abf
+**/cache.abf
+
+# User-specific and machine-specific local settings
+**/.pbi/localSettings.json
+**/localSettings.json
+**/.pbi/editorSettings.json
+**/editorSettings.json
+
+# Power BI temporary files, auto-recovery, and lock files
+*.tmp
+*.temp
+~$*
+
+# ==============================================================================
+# Python & Virtual Environments
+# ==============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+*.venv/
+venv/
+ENV/
+env/
+
+# ==============================================================================
+# Secrets, Environment Variables & Credentials
+# ==============================================================================
+.env
+.env.*
+*.key
+*.pem
+*.pfx
+secrets.json
+credentials.json
+
+# ==============================================================================
+# Operating System & IDE Files
+# ==============================================================================
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+._*
+
+# Visual Studio Code / JetBrains / Visual Studio
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ==============================================================================
+# Database Local Files / Backups
+# ==============================================================================
+*.bak
+*.ldf
+*.mdf
+

@@ -1,0 +1,37 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "slicer_keyrate_bucket",
+  "position": {
+    "x": 1060,
+    "y": 15,
+    "z": 4000,
+    "height": 680,
+    "width": 200,
+    "tabOrder": 7000
+  },
+  "visual": {
+    "visualType": "slicer",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "bond_portfolio_data"
+                    }
+                  },
+                  "Property": "KeyRateBucket"
+                }
+              },
+              "queryRef": "bond_portfolio_data.KeyRateBucket",
+              "active": true
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "BondPortfolioRisk"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "c351fe1d-5912-4782-a129-2a7d6b7ac674"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "ReportSection_Composition",
+  "displayName": "2. Portfolio Composition",
+  "displayOption": "DeprecatedDynamic",
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#F4F6FA'"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

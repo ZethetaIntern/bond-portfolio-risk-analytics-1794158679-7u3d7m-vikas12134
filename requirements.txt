@@ -1,0 +1,6 @@
+# Bond Portfolio Risk Analytics - Core Python Dependencies
+# Used for data cleaning, preprocessing, and simulation validation (scripts/clean_datasets.py)
+
+pandas>=2.0.0
+numpy>=1.24.0
+

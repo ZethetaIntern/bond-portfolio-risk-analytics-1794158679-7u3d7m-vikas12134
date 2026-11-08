@@ -1,0 +1,162 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "line_term_structure",
+  "position": {
+    "x": 19.554096383524012,
+    "y": 84.882568061763507,
+    "z": 0,
+    "height": 249.65461194636325,
+    "width": 930.36332266872137,
+    "tabOrder": 3000
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_KeyRateMapping"
+                    }
+                  },
+                  "Property": "Tenor_Years"
+                }
+              },
+              "queryRef": "_KeyRateMapping.Tenor_Years",
+              "nativeQueryRef": "Tenor_Years",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "yield_curve_history"
+                        }
+                      },
+                      "Property": "ZeroRate"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(yield_curve_history.ZeroRate)",
+              "nativeQueryRef": "ZeroRate"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "yield_curve_history"
+                        }
+                      },
+                      "Property": "Yield"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(yield_curve_history.Yield)",
+              "nativeQueryRef": "Yield"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Aggregation": {
+                "Expression": {
+                  "Column": {
+                    "Expression": {
+                      "SourceRef": {
+                        "Entity": "yield_curve_history"
+                      }
+                    },
+                    "Property": "ZeroRate"
+                  }
+                },
+                "Function": 0
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Yield Curve: Zero Rate vs Yield'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "16D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#17243A'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

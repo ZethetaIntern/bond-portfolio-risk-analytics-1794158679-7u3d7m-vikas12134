@@ -1,0 +1,95 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 1393.3616394153596,
+            "y": 229
+          },
+          "nodeIndex": "_Measures",
+          "nodeLineageTag": "37858ff8-c86b-4917-9937-19b3d31b2896",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 334.18475118062969,
+            "y": 32.804949095111567
+          },
+          "nodeIndex": "_KeyRateMapping",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 618.36163941535972,
+            "y": -15.870058272453321
+          },
+          "nodeIndex": "bond_portfolio_data",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1136.3616394153596,
+            "y": 27
+          },
+          "nodeIndex": "monte_carlo_scenarios",
+          "size": {
+            "height": 296,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1420.3616394153596,
+            "y": 87
+          },
+          "nodeIndex": "RateShockParameter",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 50,
+            "y": -34.129941727546665
+          },
+          "nodeIndex": "yield_curve_history",
+          "size": {
+            "height": 272,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 100,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}
